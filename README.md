@@ -1,4 +1,4 @@
-# Experimental thingie for interfacing with Digital Norway's TC/2 loom
+# Experimental thingie for interfacing with Digital Norway's TC2 loom
 
 Using the MQTT internet-of-things protocol.
 
