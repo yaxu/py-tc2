@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "tc2"
+version = "0.1.0"
+description = "Experimental thingie for interfacing with Digital Norway's TC/2 loom"
+authors = ["alex <alex@slab.org>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+paho-mqtt = "^2.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
