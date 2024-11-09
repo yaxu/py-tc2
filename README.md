@@ -6,7 +6,7 @@ To run with [poetry](https://python-poetry.org/), first change into
 the folder and run `poetry install`. Then start the server with
 
 ```
-poetry run python3 tc2/mqtt.py --password yourmqttpasswordgoes here
+poetry run python3 tc2/mqtt.py --password yourmqttpasswordgoeshere
 ```
 
 If you aren't our friends using our
