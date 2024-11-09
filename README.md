@@ -14,5 +14,5 @@ If you aren't our friends using our
 --port and --username options are also available to use your own or a
 public mqtt broker.
 
-If you manage to get this working, please (let us
+If you manage to get this working, please [let us
 know](mailto:alex@slab.org)!
