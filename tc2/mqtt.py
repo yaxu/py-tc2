@@ -48,7 +48,10 @@ def on_message(client, userdata, msg):
     data = msg.payload.decode()
     match topic:
         case "/pattern":
-            print("/pattern", json.loads(data))
+            print("/pattern", data)
+            tc2.queue(lambda x: x == '1', map(list(data)))
+        case "/pattern/json":
+            print("/pattern/json", json.loads(data))
             tc2.queue(json.loads(data))
         case "/tc2/request-status":
             mqttc.publish("/tc2/status", json.dumps(tc2.status))

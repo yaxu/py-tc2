@@ -77,8 +77,12 @@ class TC2:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((self.host, self.port))
         # Start
-        sock.sendall(bytes.fromhex("010104"))
+        self.send_hex("010104")
         self.sock = sock
+
+    def send_hex(self, msg):
+        print("sending " + msg)
+        self.sock.sendall(bytes.fromhex(msg))
 
     def shed_to_string(self, shed):
         modules = []
@@ -110,7 +114,7 @@ class TC2:
         _modules = ("%02d" % self.module_count)
         header = "05" + _command + _sequence + _modules + _packet + _modules
         data = self.shed_to_string(shed)
-        self.sock.sendall(bytes.fromhex(header + data))
+        self.send_hex(header + data)
 
     def pick_next(self):
         if (len(self.future) > 0):
@@ -118,7 +122,7 @@ class TC2:
             self.pick(shed)
 
     def stop(self):
-        self.sock.sendall(bytes.fromhex("010101"))
+        self.send_hex("010101")
 
     def queue(self, shed):
         self.future.append(shed)
