@@ -61,6 +61,8 @@ class TC2:
         self.sequence = 0
         self.history = []
         self.future = []
+        # True when a pick has been sent and hasn't yet been woven
+        self.weaving = False
 
     def calculate_warp_mapping(self):
         warp_mapping = []
@@ -110,7 +112,7 @@ class TC2:
         data = self.shed_to_string(shed)
         self.sock.sendall(bytes.fromhex(header + data))
 
-    def pick_next(self, shed):
+    def pick_next(self):
         if (len(self.future) > 0):
             shed = self.future.pop(0)
             self.pick(shed)
@@ -120,6 +122,8 @@ class TC2:
 
     def queue(self, shed):
         self.future.append(shed)
+        if not self.weaving:
+            self.pick_next()
 
     def status(self):
         return {"ready": self.tc2_ready}
