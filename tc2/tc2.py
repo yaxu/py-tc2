@@ -105,9 +105,6 @@ class TC2:
         return result
 
     def pick(self, shed):
-
-        if len(shed) < 
-
         self.history.append(shed)
         self.sequence = self.sequence + 1
 
