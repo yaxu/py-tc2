@@ -122,7 +122,7 @@ class TC2:
         status_changed = False
         tc2_received = select.select([self.sock], [], [], timeout)
         if tc2_received[0]:
-            data = s.recv(1024).hex()
+            data = self.sock.recv(1024).hex()
             
             print("tc2 says: ", data)
             if re.search("^0503", data):
