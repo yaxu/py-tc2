@@ -120,6 +120,7 @@ class TC2:
         if (len(self.future) > 0):
             shed = self.future.pop(0)
             self.pick(shed)
+            self.weaving = True
 
     def stop(self):
         self.send_hex("010101")
@@ -149,6 +150,7 @@ class TC2:
             elif re.search("^01010101$", data):
                 print("stopped")
                 self.tc2_ready = False
+                self.weaving = False
             elif data == "01010401":
                 print("tc2 ready")
                 self.sock.sendall(b'')
