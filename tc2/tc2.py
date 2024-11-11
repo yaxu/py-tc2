@@ -117,6 +117,7 @@ class TC2:
         
     def queue(self, shed):
         self.future.append(shed)
+        
             
     def poll(self, timeout=0.1):
         status_changed = False
@@ -128,7 +129,9 @@ class TC2:
             if re.search("^0503", data):
                 print("footswitch")
                 self.pick_next()
-            elif data == "1010401":
+            elif data == "01010401":
                 print("tc2 ready")
+                self.sock.sendall("")
                 self.tc2_ready = True
                 status_changed = True
+        return status_changed
