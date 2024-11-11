@@ -44,9 +44,11 @@ def on_connect(client, userdata, flags, reason_code, properties):
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
+    topic = msg.topic
+    data = msg.payload.decode()
     match topic:
         case "/pattern":
-            tc2.queue(json.loads(userdata))
+            tc2.queue(json.loads(data))
         case "/tc2/request-status":
             mqttc.publish("/tc2/status", json.dumps(tc2.status))
 
@@ -70,5 +72,4 @@ while run:
     status_changed = tc2.poll(0.05)
     if status_changed:
         mqttc.publish("/tc2/status", json.dumps(tc2.status))
-    print("tick")
 
