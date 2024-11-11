@@ -77,7 +77,27 @@ class TC2:
         # Start
         sock.sendall(bytes.fromhex("010104"))
         self.sock = sock
+
+    def shed_to_string(self, shed):
+        modules = []
+        for i in range(0,self.module_count):
+            modules.append(['0'] * (self.warps_per_module + (self.extra_module_bytes * 4)))
+
+        for i, bit in enumerate(shed):
+            if bit:
+                mapping = self.warp_mapping[i]
+                modules[mapping['module']][mapping['index']] = '1'
+        result = ""
+        for i in range(0,self.module_count):
+            result += "%02d" % (i+1)
+            bits = modules[i]
+            while len(bits) > 0:
+                byte = bits[:4]
+                bits = bits[4:]
+                result += hex(15-int(''.join(byte), 2))[2]
         
+        return result
+
     def pick(self, shed):
         self.history.append(shed)
         self.sequence = self.sequence + 1
@@ -85,14 +105,14 @@ class TC2:
         _command = '02'
         _sequence = '%04d' % self.sequence
         _packet = '01'
-        _modules = ("%02d" % module_count)
+        _modules = ("%02d" % self.module_count)
         header = "05" + _command + _sequence + _modules + _packet + _modules
-        data = shed_to_string(shed)
+        data = self.shed_to_string(shed)
         self.sock.sendall(bytes.fromhex(header + data))
 
     def pick_next(self, shed):
-        if (len(future) > 0):
-            shed = future.pop(0)
+        if (len(self.future) > 0):
+            shed = self.future.pop(0)
             self.pick(shed)
         
     def queue(self, shed):
@@ -108,7 +128,7 @@ class TC2:
             if re.search("^0503", data):
                 print("footswitch")
                 self.pick_next()
-            elif data == "1010401"
+            elif data == "1010401":
                 print("tc2 ready")
                 self.tc2_ready = True
                 status_changed = True
