@@ -141,7 +141,7 @@ class TC2:
             data = self.sock.recv(1024).hex()
             
             print("tc2 says: ", data)
-            if re.search("^0503$", data):
+            if re.search("^0503", data):
                 print("footswitch")
                 self.weaving = False
                 self.pick_next()
