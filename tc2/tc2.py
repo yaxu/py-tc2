@@ -52,6 +52,7 @@ class TC2:
     extra_module_bytes = 5 # Some 'gaps' in the module..
 
     warps = warps_per_module * module_count
+    tc2_ready = False
 
     def __init__(self, host="192.168.0.100", port=62000):
         self.host = host
@@ -73,6 +74,7 @@ class TC2:
     def connect(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((self.host, self.port))
+        # Start
         sock.sendall(bytes.fromhex("010104"))
         self.sock = sock
         
@@ -92,16 +94,21 @@ class TC2:
         if (len(future) > 0):
             shed = future.pop(0)
             self.pick(shed)
-            
         
     def queue(self, shed):
         self.future.append(shed)
             
     def poll(self, timeout=0.1):
+        status_changed = False
         tc2_received = select.select([self.sock], [], [], timeout)
         if tc2_received[0]:
-            data = s.recv(1024)
-            print("tc2 says: ", data.hex())
-            if re.search("^0503", data.hex()):
+            data = s.recv(1024).hex()
+            
+            print("tc2 says: ", data)
+            if re.search("^0503", data):
                 print("footswitch")
                 self.pick_next()
+            elif data == "1010401"
+                print("tc2 ready")
+                self.tc2_ready = True
+                status_changed = True

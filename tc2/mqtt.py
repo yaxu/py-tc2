@@ -33,13 +33,13 @@ mqtt_username = args.username or "tue"
 mqtt_password = args.password
 mqtt_port = 1883
 
-subscribe_topics = ["/pattern", "/tc2/connect"]
+subscribe_topics = ["/pattern", "/tc2/request-status"]
 
 ## mqtt connect
 
 def on_connect(client, userdata, flags, reason_code, properties):
     print(f"Connected with result code {reason_code}")
-    for topic in subscribe_topic:
+    for topic in subscribe_topics:
         client.subscribe(topic)
 
 # The callback for when a PUBLISH message is received from the server.
@@ -47,6 +47,8 @@ def on_message(client, userdata, msg):
     match topic:
         case "/pattern":
             tc2.queue(json.loads(userdata))
+        case "/tc2/request-status":
+            mqttc.publish("/tc2/status", json.dumps(tc2.status))
 
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.on_connect = on_connect
@@ -54,7 +56,7 @@ mqttc.on_message = on_message
 mqttc.username_pw_set(username=mqtt_username, password=mqtt_password)
 mqttc.connect(mqtt_host, mqtt_port, 60)
 
-print("Connecting to TC/2")
+
 tc2.connect()
 
 print("Waiting for data..")
@@ -65,8 +67,8 @@ while run:
         print("mqtt error")
         run = False
     # blocks for up to 1/20th of a second
-    tc2.poll(0.05)
+    status_changed = tc2.poll(0.05)
+    if status_changed:
+        mqttc.publish("/tc2/status", json.dumps(tc2.status))
     print("tick")
-
-
 
