@@ -26,7 +26,7 @@
 # Interactive Computational Handweaving. In Proceedings of the 2020
 # ACM Designing Interactive Systems Conference (DIS '20). Association for Computing Machinery, New York, NY, USA, 1033–1046. https://doi.org/10.1145/3357236.3395538
 
-import socket, re, select
+import socket, re, select, time
 
 class TC2:
     tc2_ip = "192.168.0.100"
@@ -53,6 +53,7 @@ class TC2:
 
     warps = warps_per_module * module_count
     tc2_ready = False
+    last_footswitch = time.time() * 1000000
 
     def __init__(self, host="192.168.0.100", port=62000):
         self.host = host
@@ -63,6 +64,7 @@ class TC2:
         self.future = []
         # True when a pick has been sent and hasn't yet been woven
         self.weaving = False
+        self.on_footswitch = None
 
     def calculate_warp_mapping(self):
         warp_mapping = []
@@ -133,7 +135,7 @@ class TC2:
     def status(self):
         return {"ready": self.tc2_ready}
         
-            
+    
     def poll(self, timeout=0.1):
         status_changed = False
         tc2_received = select.select([self.sock], [], [], timeout)
@@ -143,7 +145,12 @@ class TC2:
             print("tc2 says: ", data)
             if re.search("^0503", data):
                 print("footswitch")
+                t = time.time() * 1000000
+                d = self.last_footswitch - t
+                self.last_footswitch = t
                 self.weaving = False
+                if self.on_footswitch:
+                    self.on_footswitch(d)
                 self.pick_next()
             elif re.search("^0504$", data):
                 print("resting")

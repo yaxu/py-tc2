@@ -65,6 +65,7 @@ mqttc.username_pw_set(username=mqtt_username, password=mqtt_password)
 mqttc.connect(mqtt_host, mqtt_port, 60)
 
 
+tc2.on_footswitch = lambda d: mqttc.publish("/tc2/footswitch", json.dumps(d))
 tc2.connect()
 
 print("Waiting for data..")
