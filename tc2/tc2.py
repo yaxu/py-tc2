@@ -142,6 +142,7 @@ class TC2:
             print("tc2 says: ", data)
             if re.search("^0503$", data):
                 print("footswitch")
+                self.weaving = False
                 self.pick_next()
             elif re.search("^0504$", data):
                 print("resting")
