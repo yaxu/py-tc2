@@ -53,7 +53,7 @@ class TC2:
 
     warps = warps_per_module * module_count
     tc2_ready = False
-    last_footswitch = time.time() * 1000000
+    last_footswitch = time.time()
 
     def __init__(self, host="192.168.0.100", port=62000):
         self.host = host
@@ -145,8 +145,8 @@ class TC2:
             print("tc2 says: ", data)
             if re.search("^0503", data):
                 print("footswitch")
-                t = time.time() * 1000000
-                d = self.last_footswitch - t
+                t = time.time()
+                d = t - self.last_footswitch
                 self.last_footswitch = t
                 self.weaving = False
                 if self.on_footswitch:
