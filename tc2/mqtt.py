@@ -33,7 +33,7 @@ mqtt_username = args.username or "tue"
 mqtt_password = args.password
 mqtt_port = 1883
 
-subscribe_topics = ["/pattern", "/tc2/request-status"]
+subscribe_topics = ["/pattern", "/tc2/request-status", "/tc2/stop"]
 
 ## mqtt connect
 
@@ -52,6 +52,8 @@ def on_message(client, userdata, msg):
             tc2.queue(json.loads(data))
         case "/tc2/request-status":
             mqttc.publish("/tc2/status", json.dumps(tc2.status))
+        case "/tc2/stop":
+            tc2.stop()
 
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.on_connect = on_connect

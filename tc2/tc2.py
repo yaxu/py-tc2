@@ -114,7 +114,10 @@ class TC2:
         if (len(self.future) > 0):
             shed = self.future.pop(0)
             self.pick(shed)
-        
+
+    def stop(self, shed):
+        self.sock.sendall(bytes.fromhex("010101"))
+
     def queue(self, shed):
         self.future.append(shed)
 
@@ -129,9 +132,14 @@ class TC2:
             data = self.sock.recv(1024).hex()
             
             print("tc2 says: ", data)
-            if re.search("^0503", data):
+            if re.search("^0503$", data):
                 print("footswitch")
                 self.pick_next()
+            elif re.search("^0504$", data):
+                print("resting")
+            elif re.search("^01010101$", data):
+                print("stopped")
+                self.tc2_ready = False
             elif data == "01010401":
                 print("tc2 ready")
                 self.sock.sendall(b'')
