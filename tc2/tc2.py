@@ -115,7 +115,7 @@ class TC2:
             shed = self.future.pop(0)
             self.pick(shed)
 
-    def stop(self, shed):
+    def stop(self):
         self.sock.sendall(bytes.fromhex("010101"))
 
     def queue(self, shed):
