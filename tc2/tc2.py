@@ -76,9 +76,9 @@ class TC2:
     def connect(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((self.host, self.port))
+        self.sock = sock
         # Start
         self.send_hex("010104")
-        self.sock = sock
 
     def send_hex(self, msg):
         print("sending " + msg)
@@ -105,6 +105,9 @@ class TC2:
         return result
 
     def pick(self, shed):
+
+        if len(shed) < 
+
         self.history.append(shed)
         self.sequence = self.sequence + 1
 
