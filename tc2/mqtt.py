@@ -49,7 +49,7 @@ def on_message(client, userdata, msg):
     match topic:
         case "/pattern":
             print("/pattern", data)
-            tc2.queue(lambda x: x == '1', map(list(data)))
+            tc2.queue(map(lambda x: x == '1', list(data)))
         case "/pattern/json":
             print("/pattern/json", json.loads(data))
             tc2.queue(json.loads(data))
