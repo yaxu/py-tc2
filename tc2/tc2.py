@@ -131,7 +131,7 @@ class TC2:
                 self.pick_next()
             elif data == "01010401":
                 print("tc2 ready")
-                self.sock.sendall("")
+                self.sock.sendall([])
                 self.tc2_ready = True
                 status_changed = True
         return status_changed
