@@ -117,6 +117,9 @@ class TC2:
         
     def queue(self, shed):
         self.future.append(shed)
+
+    def status(self):
+        return {"ready": self.tc2_ready}
         
             
     def poll(self, timeout=0.1):

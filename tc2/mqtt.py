@@ -72,5 +72,5 @@ while run:
     # blocks for up to 1/20th of a second
     status_changed = tc2.poll(0.05)
     if status_changed:
-        mqttc.publish("/tc2/status", json.dumps(tc2.status))
+        mqttc.publish("/tc2/status", json.dumps(tc2.status()))
 
