@@ -3,5 +3,6 @@
 import paho.mqtt.publish as publish
 import json
 
-publish.single("/pattern/json", json.dumps([True, False, False, True, False]), hostname="slab.org", auth={"username":"tue","password":"runningwithscissors"})
-#publish.single("/tc2/stop", "", hostname="slab.org", auth={"username":"tue","password":"runningwithscissors"})
+# publish.single("/pattern", "1001101010", hostname="slab.org", auth={"username":"tue","password":"runningwithscissors"})
+publish.single("/tc2/footswitch", "1.2", hostname="slab.org", auth={"username":"tue","password":"runningwithscissors"})
+

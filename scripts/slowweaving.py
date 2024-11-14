@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 import paho.mqtt.client as mqtt
 import json, math
+from collections import deque
+
+counter = 0
 
 def bjorklund(steps, pulses):
     steps = int(steps)
@@ -44,14 +47,24 @@ def on_connect(client, userdata, flags, reason_code, properties):
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
+    global counter
+    print("counter", counter)
     print(msg.topic+" "+str(msg.payload))
     if msg.topic == '/tc2/footswitch':
         delta = json.loads(msg.payload)
         pulses = min(int(math.log(delta) * 10),32)
-        steps = 32
-        pattern = "".join(bjorklund(steps,pulses))
+        steps = 128
+        print("delta", delta, "pulses", pulses)
+        bjork = bjorklund(steps,pulses)
+        seq = deque(bjork)
+        seq.rotate(counter)
+        bjork = list(seq)
+        bjork = bjork * (int(1320 / steps)+1)
+        bjork = bjork[:1320]
+        pattern = "".join(map(lambda x: "1" if x else "0", bjork))
         print("sending", pattern)
         client.publish("/pattern", pattern)
+        counter = counter + 1
 
 
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
